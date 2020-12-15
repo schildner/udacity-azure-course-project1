@@ -82,6 +82,11 @@ Below are listed some examples after executing the corresponding steps from Inst
   "type": "Microsoft.Resources/resourceGroups"
 } 
 
+3. a) Example output for checking existence of resource group:
+
+~/udacity/azure-course/project1> az group exists -n udacity-azure-course-project1-iac
+false
+
 3. b) Example output for VM image building command (took 7m 42):
 
  ~/udacity/azure-course/project1> packer build server.json
@@ -233,13 +238,14 @@ your Terraform state and will henceforth be managed by Terraform.
 
 var.password
   The VM users password:
+  Enter a value: *********
 
-  Enter a value: Abc456!
-
+azurerm_resource_group.main: Refreshing state... [id=/subscriptions/707a2a01-f589-4fbf-8753-b278612b58ef/resourceGroups/udacity-azure-course-project1-iac-rg]
 
 An execution plan has been generated and is shown below.
 Resource actions are indicated with the following symbols:
   + create
+  ~ update in-place
 
 Terraform will perform the following actions:
 
@@ -539,15 +545,17 @@ Terraform will perform the following actions:
         }
     }
 
-  # azurerm_resource_group.main will be created
-  + resource "azurerm_resource_group" "main" {
-      + id       = (known after apply)
-      + location = "westeurope"
-      + name     = "udacity-azure-course-project1-iac-rg"
-      + tags     = {
+  # azurerm_resource_group.main will be updated in-place
+  ~ resource "azurerm_resource_group" "main" {
+        id       = "/subscriptions/707a2a01-f589-4fbf-8753-b278612b58ef/resourceGroups/udacity-azure-course-project1-iac-rg"
+        name     = "udacity-azure-course-project1-iac-rg"
+      ~ tags     = {
           + "project_name" = "IaC"
           + "stage"        = "Submission"
         }
+        # (1 unchanged attribute hidden)
+
+        # (1 unchanged block hidden)
     }
 
   # azurerm_subnet.main will be created
@@ -582,7 +590,7 @@ Terraform will perform the following actions:
       + vm_protection_enabled = false
     }
 
-Plan: 13 to add, 0 to change, 0 to destroy.
+Plan: 12 to add, 1 to change, 0 to destroy.
 
 ------------------------------------------------------------------------
 
@@ -595,6 +603,81 @@ To perform exactly these actions, run the following command to apply:
 
 5. c) Example output after deploying the resources via terraform apply:
 
+~/udacity/azure-course/project1> terraform apply "solution.plan
+
+azurerm_resource_group.main: Modifying... [id=/subscriptions/707a2a01-f589-4fbf-8753-b278612b58ef/resourceGroups/udacity-azure-course-project1-iac-rg]
+azurerm_resource_group.main: Modifications complete after 1s [id=/subscriptions/707a2a01-f589-4fbf-8753-b278612b58ef/resourceGroups/udacity-azure-course-project1-iac-rg]
+azurerm_availability_set.main: Creating...
+azurerm_managed_disk.main: Creating...
+azurerm_virtual_network.main: Creating...
+azurerm_public_ip.main: Creating...
+azurerm_network_security_group.main: Creating...
+azurerm_availability_set.main: Creation complete after 2s [id=/subscriptions/707a2a01-f589-4fbf-8753-b278612b58ef/resourceGroups/udacity-azure-course-project1-iac-rg/providers/Microsoft.Compute/availabilitySets/udacity-azure-course-project1-iac-as]
+azurerm_public_ip.main: Creation complete after 4s [id=/subscriptions/707a2a01-f589-4fbf-8753-b278612b58ef/resourceGroups/udacity-azure-course-project1-iac-rg/providers/Microsoft.Network/publicIPAddresses/udacity-azure-course-project1-iac-ip]
+azurerm_lb.main: Creating...
+azurerm_managed_disk.main: Creation complete after 4s [id=/subscriptions/707a2a01-f589-4fbf-8753-b278612b58ef/resourceGroups/udacity-azure-course-project1-iac-rg/providers/Microsoft.Compute/disks/udacity-azure-course-project1-iac-md]
+azurerm_network_security_group.main: Creation complete after 5s [id=/subscriptions/707a2a01-f589-4fbf-8753-b278612b58ef/resourceGroups/udacity-azure-course-project1-iac-rg/providers/Microsoft.Network/networkSecurityGroups/udacity-azure-course-project1-iac-nsg]
+azurerm_virtual_network.main: Creation complete after 5s [id=/subscriptions/707a2a01-f589-4fbf-8753-b278612b58ef/resourceGroups/udacity-azure-course-project1-iac-rg/providers/Microsoft.Network/virtualNetworks/udacity-azure-course-project1-iac-nw]
+azurerm_subnet.main: Creating...
+azurerm_lb.main: Creation complete after 2s [id=/subscriptions/707a2a01-f589-4fbf-8753-b278612b58ef/resourceGroups/udacity-azure-course-project1-iac-rg/providers/Microsoft.Network/loadBalancers/udacity-azure-course-project1-iac-lb]
+azurerm_lb_backend_address_pool.main: Creating...
+azurerm_lb_backend_address_pool.main: Creation complete after 1s [id=/subscriptions/707a2a01-f589-4fbf-8753-b278612b58ef/resourceGroups/udacity-azure-course-project1-iac-rg/providers/Microsoft.Network/loadBalancers/udacity-azure-course-project1-iac-lb/backendAddressPools/BackEndAddressPool]
+azurerm_subnet.main: Creation complete after 5s [id=/subscriptions/707a2a01-f589-4fbf-8753-b278612b58ef/resourceGroups/udacity-azure-course-project1-iac-rg/providers/Microsoft.Network/virtualNetworks/udacity-azure-course-project1-iac-nw/subnets/udacity-azure-course-project1-iac-subnet1]
+azurerm_network_interface.main[0]: Creating...
+azurerm_network_interface.main[1]: Creating...
+azurerm_network_interface.main[1]: Creation complete after 2s [id=/subscriptions/707a2a01-f589-4fbf-8753-b278612b58ef/resourceGroups/udacity-azure-course-project1-iac-rg/providers/Microsoft.Network/networkInterfaces/udacity-azure-course-project1-iac-nic-1]
+azurerm_network_interface.main[0]: Creation complete after 3s [id=/subscriptions/707a2a01-f589-4fbf-8753-b278612b58ef/resourceGroups/udacity-azure-course-project1-iac-rg/providers/Microsoft.Network/networkInterfaces/udacity-azure-course-project1-iac-nic-0]
+azurerm_linux_virtual_machine.main[1]: Creating...
+azurerm_linux_virtual_machine.main[0]: Creating...
+azurerm_linux_virtual_machine.main[1]: Still creating... [10s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [10s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [21s elapsed]
+azurerm_linux_virtual_machine.main[1]: Still creating... [21s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [31s elapsed]
+azurerm_linux_virtual_machine.main[1]: Still creating... [31s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [41s elapsed]
+azurerm_linux_virtual_machine.main[1]: Still creating... [41s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [51s elapsed]
+azurerm_linux_virtual_machine.main[1]: Still creating... [51s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [1m1s elapsed]
+azurerm_linux_virtual_machine.main[1]: Still creating... [1m1s elapsed]
+azurerm_linux_virtual_machine.main[1]: Still creating... [1m11s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [1m11s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [1m21s elapsed]
+azurerm_linux_virtual_machine.main[1]: Still creating... [1m21s elapsed]
+azurerm_linux_virtual_machine.main[1]: Still creating... [1m31s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [1m31s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [1m41s elapsed]
+azurerm_linux_virtual_machine.main[1]: Still creating... [1m41s elapsed]
+azurerm_linux_virtual_machine.main[1]: Still creating... [1m51s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [1m51s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [2m1s elapsed]
+azurerm_linux_virtual_machine.main[1]: Still creating... [2m1s elapsed]
+azurerm_linux_virtual_machine.main[1]: Still creating... [2m11s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [2m11s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [2m21s elapsed]
+azurerm_linux_virtual_machine.main[1]: Still creating... [2m21s elapsed]
+azurerm_linux_virtual_machine.main[1]: Still creating... [2m31s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [2m31s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [2m41s elapsed]
+azurerm_linux_virtual_machine.main[1]: Still creating... [2m41s elapsed]
+azurerm_linux_virtual_machine.main[1]: Creation complete after 2m50s [id=/subscriptions/707a2a01-f589-4fbf-8753-b278612b58ef/resourceGroups/udacity-azure-course-project1-iac-rg/providers/Microsoft.Compute/virtualMachines/udacity-azure-course-project1-iac-vm-1]
+azurerm_linux_virtual_machine.main[0]: Still creating... [2m51s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [3m1s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [3m11s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [3m21s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [3m31s elapsed]
+azurerm_linux_virtual_machine.main[0]: Still creating... [3m41s elapsed]
+azurerm_linux_virtual_machine.main[0]: Creation complete after 3m49s [id=/subscriptions/707a2a01-f589-4fbf-8753-b278612b58ef/resourceGroups/udacity-azure-course-project1-iac-rg/providers/Microsoft.Compute/virtualMachines/udacity-azure-course-project1-iac-vm-0]
+
+Apply complete! Resources: 12 added, 1 changed, 0 destroyed.
+
+The state of your infrastructure has been saved to the path
+below. This state is required to modify and destroy your
+infrastructure, so keep it safe. To inspect the complete state
+use the `terraform show` command.
+
+State path: terraform.tfstate
 
 
 6. Example output after destroying resources with terraform:
